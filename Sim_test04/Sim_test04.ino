@@ -94,6 +94,7 @@ void pin_ISR() //ISR for when box is manually closed a latch gets closed and hig
     
 }
 
+//
 void  serialEvent1()  //Serial Rx ISR
 {
     while (Serial1.available()) 
@@ -112,7 +113,7 @@ void  serialEvent1()  //Serial Rx ISR
             Serial1.println();
             //Serial1.println(rec_data);
             Serial1.println(fed_buf0);
-            
+            //Notify here to application that id has been feeded successfully after a certain messsage is recived from the box
         }
 
         if((rec=='#') && (rec_start = 1))
@@ -127,7 +128,7 @@ void  serialEvent1()  //Serial Rx ISR
             Serial1.println();
             //Serial1.println(rec_data);
             Serial1.println(fed_buf1);
-            
+            //Notify here to application that id has been feeded successfully after a certain messsage is recived from the box
         }
 
         if((rec=='%') && (rec_start = 1))
@@ -142,7 +143,7 @@ void  serialEvent1()  //Serial Rx ISR
             Serial1.println();
             //Serial1.println(rec_data);
             Serial1.println(fed_buf2);
-            
+            //Notify here to application that id has been feeded successfully after a certain messsage is recived from the box
         }
                
         if((rec_start==1)&&(rec!='@'))
@@ -253,6 +254,5 @@ void loop()
     }//closing for if(key)
    
 }//closing for void loop()
-
 
 
