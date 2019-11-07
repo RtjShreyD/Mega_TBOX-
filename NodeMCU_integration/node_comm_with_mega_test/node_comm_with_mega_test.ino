@@ -17,26 +17,15 @@
 #define WIFI_PASSWORD "82$morph"
 
 //Global Variables block//
-char sub_str[15], box_id[5], odr_id[5], charBuf[10];
+char sub_str[15], box_id[5], odr_id[5], charBuf[10], OldData[10], DataBuf[10];
 String nx = "";
+int count = 0;
+String Data = "";
+int len=0;
 
 //******** Global Variables block end ********//
 
 //Custom functions block//
-//char *concat(const char *s1, const char *s2) //function to concatenate two strings 
-//{
-//    const size_t len1 = strlen(s1);
-//    const size_t len2 = strlen(s2);
-//    char *result = malloc(len1 + len2 + 1); // +1 for the null-terminator
-//    if(result==NULL)
-//  {
-//    //uart_TXstring("Fatal: Memory not allocated");
-//    exit(1);
-//  }
-//    memcpy(result, s1, len1);
-//    memcpy(result + len1, s2, len2 + 1); // +1 to copy the null-terminator
-//    return result;
-//}
 
 void str_slice(char string[], int pos, int len)  //to slice a string from in betwn//pos starts from 1 and len is no of chars from pos including pos itself
 {
@@ -75,7 +64,6 @@ void setup()
 
     String path = "/boxes/Y3FRSKfkVcYAPygUD9cUP2762HY2";
 
-    String Data = "";
     
 
     Serial.println("------------------------------------");
@@ -119,5 +107,25 @@ void setup()
 
 void loop() 
 { 
-    
-}          
+  
+  Data = firebaseData.stringData();
+  len=sizeof(Data);
+  Data.toCharArray(DataBuf, len);
+  
+  if(strcmp(DataBuf, OldData)==1) //1 means when they are not identical
+  {    
+     Serial.println(DataBuf);
+     memset(&OldData, '\0' , sizeof(OldData));
+     strcpy(DataBuf, OldData);
+     //memcpy(OldData, Data, strlen(Data)+1);
+  }
+  else
+  {
+     memset(&DataBuf, '\0' , sizeof(DataBuf)); 
+     //memset(&Data, '\0' , sizeof(Data));
+  }
+
+  memset(&Data, '\0' , sizeof(Data)); 
+  delay(20000); 
+  
+}                   
