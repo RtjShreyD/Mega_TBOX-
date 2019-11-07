@@ -43,6 +43,7 @@ void setup()
    pinMode(46, OUTPUT);  
    pinMode(2, INPUT);
    lcd_init();
+   lcd_string("Welcome ParcelBox");
    Serial.begin(9600);
    //gsm_port.begin(9600); 
    // Turn on the transmission, reception, and Receive interrupt 
@@ -63,6 +64,7 @@ void pin_ISR() //ISR for when box is manually closed a latch gets closed and hig
         lcd_command(0x01);
         lcd_command(0x80);
         lcd_string("Locking Box");
+        Serial.println("Locking");
         //memset(&fed_id[0],'v' , sizeof(fed_id)); //changing contents of fed_id completely so that once used cannot be used again to open box
         //Serial.println(fed_id);
         //Serial1.print("f here goes as");
@@ -215,7 +217,7 @@ void loop()
         if((key_start==1)&&(key!='#'))
         {
            key_str[cnt] = key;
-           //Serial.print('X');
+           Serial.print('X');
             //Serial.print(rec_str[cnt);
             lcd_command(0xc0+cnt);
             lcd_data('X');

@@ -31,6 +31,7 @@ void send_msg()
 void configure()
 {
   Serial.println("Initializing..."); 
+  Serial1.println("INIT start");
   delay(1000); 
   Serial1.println("AT"); //Once the handshake test is successful, it will back to OK
   response();
