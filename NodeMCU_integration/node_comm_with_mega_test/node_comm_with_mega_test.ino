@@ -1,7 +1,8 @@
 #include "FirebaseESP8266.h"
 #include <ESP8266WiFi.h>
-#include <string.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<string.h>
+#include<stdio.h>
 
 //#define FIREBASE_HOST "restsvr.firebaseio.com" //firebase end point
 //#define FIREBASE_AUTH "DAyn8zLBXmBecOYEZue81VirzEd3upyRukT23ghG" //secret key for authentication
@@ -22,20 +23,20 @@ String nx = "";
 //******** Global Variables block end ********//
 
 //Custom functions block//
-char *concat(const char *s1, const char *s2) //function to concatenate two strings 
-{
-    const size_t len1 = strlen(s1);
-    const size_t len2 = strlen(s2);
-    char *result = malloc(len1 + len2 + 1); // +1 for the null-terminator
-    if(result==NULL)
-  {
-    uart_TXstring("Fatal: Memory not allocated");
-    exit(1);
-  }
-    memcpy(result, s1, len1);
-    memcpy(result + len1, s2, len2 + 1); // +1 to copy the null-terminator
-    return result;
-}
+//char *concat(const char *s1, const char *s2) //function to concatenate two strings 
+//{
+//    const size_t len1 = strlen(s1);
+//    const size_t len2 = strlen(s2);
+//    char *result = malloc(len1 + len2 + 1); // +1 for the null-terminator
+//    if(result==NULL)
+//  {
+//    //uart_TXstring("Fatal: Memory not allocated");
+//    exit(1);
+//  }
+//    memcpy(result, s1, len1);
+//    memcpy(result + len1, s2, len2 + 1); // +1 to copy the null-terminator
+//    return result;
+//}
 
 void str_slice(char string[], int pos, int len)  //to slice a string from in betwn//pos starts from 1 and len is no of chars from pos including pos itself
 {

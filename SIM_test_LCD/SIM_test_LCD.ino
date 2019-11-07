@@ -1,4 +1,4 @@
-//#include "LCD.h"
+#include "LCD.h"
 #include <Keypad.h>
 
 const byte ROWS = 4; //four rows
@@ -24,8 +24,8 @@ char fed_buf2[10]= {'2','2','2'};
 //int f0=0, f1=0, f2=0; //flag to tell which id is already used 
 int f=0;
 
-//for gsm recving variables and buffers// //Currently Serial1 will recieve new orderids from NodeMCU//
-char rec = 0; 
+//for gsm recving variables and buffers// 
+char rec = 0;
 char rec_start = 0, rec_stop = 0, count = 0;
 char rec_str[10], rec_data[10];
 ///.............///
@@ -42,10 +42,11 @@ void setup()
    pinMode(45, OUTPUT);
    pinMode(46, OUTPUT);  
    pinMode(2, INPUT);
-//   lcd_init();
-//   lcd_string("Welcome ParcelBox");
+   lcd_init();
+   lcd_command(0x01);
+   lcd_command(0x80);
+   lcd_string("Welcome ParcelBox");
    Serial.begin(9600);
-   Serial.println("Welcome ParcelBox");
    //gsm_port.begin(9600); 
    // Turn on the transmission, reception, and Receive interrupt 
    Serial1.begin(9600);    
@@ -62,16 +63,19 @@ void pin_ISR() //ISR for when box is manually closed a latch gets closed and hig
 {
         digitalWrite(44, LOW);         //Closing the box for delivery above and reseting its flag//Could be used 
         //Serial.println("Shelf has been closed");
-//        lcd_command(0x01);
-//        lcd_command(0x80);
-//        lcd_string("Locking Box");
-        Serial.println("Locking");
+        lcd_command(0x01);
+        lcd_command(0x80);
+        lcd_string("Locking Box");
+        delay(20000); //to be adjusted as per hardware caliberation
+        lcd_command(0x01);
+        lcd_command(0x80);
+        lcd_string("Welcome ParcelBox");
         //memset(&fed_id[0],'v' , sizeof(fed_id)); //changing contents of fed_id completely so that once used cannot be used again to open box
         //Serial.println(fed_id);
         //Serial1.print("f here goes as");
         //Serial1.println(f);
-//        lcd_command(0xc0);
-//        lcd_string("Delivery logged & success");
+        lcd_command(0xc0);
+        lcd_command("Delivery logged & success");
         
         switch(f)
         {
@@ -172,7 +176,7 @@ void loop()
 {
     char key = keypad.getKey();    
     //string format *....string...#//   
-    //Serial.println(key);
+    
     if (key)
     {
         if((key=='#') && (key_start = 1))
@@ -195,20 +199,20 @@ void loop()
             if((f==1|f==2|f==3) && (key_stop==1))
             {    
 //              Serial.println(f);
-                Serial.println("Authenticated");   
+//              Serial.println("Authenticated");   
 //              Serial.println("Select Shelf");
               //Serial.println("Enter choice 1 or 2 or 3");
-//              lcd_command(0x01); //clear screen
-//              lcd_command(0x80);
-//              lcd_string("Authenticated");             
+              lcd_command(0x01); //clear screen
+              lcd_command(0x80);
+              lcd_string("Authenticated");             
               auth_flag = 1;  
             }
             else
             {
-              Serial.println("Order id incorrect");
-//              lcd_command(0x01); //clear screen
-//              lcd_command(0x80);
-//              lcd_string("Order Id Incorrect");
+              //Serial.println("Order id incorrect");
+              lcd_command(0x01); //clear screen
+              lcd_command(0x80);
+              lcd_string("Order Id Incorrect");
             } 
             memset(&key_data[0], '\0', sizeof(key_data));
 
@@ -219,9 +223,9 @@ void loop()
         {
            key_str[cnt] = key;
            //Serial.print('X');
-           Serial.print(key_str[cnt]);
-//            lcd_command(0xc0+cnt);
-//            lcd_data('X');
+            //Serial.print(rec_str[cnt);
+            lcd_command(0xc0+cnt);
+            lcd_data('X');
            cnt++;
         }
   
@@ -230,26 +234,26 @@ void loop()
            cnt=0;
            memset(&key_str[0], '\0', sizeof(key_str));
            key_start=1;
-           Serial.println("Enter order id: ");
-//           lcd_command(0x80);
-//           lcd_string("Enter order id: ");
+           //Serial.println("Enter order id: ");
+           lcd_command(0x80);
+           lcd_string("Enter order id: ");
            auth_flag = 0;
                      
         }      
         
         if((auth_flag==1)) //To process after authentication//
         {
-            Serial.println("Press 1 to open");
-//            lcd_command(0xc0);
-//            lcd_string("Press 1 to open box"); 
+            //Serial.println("Press 1 to open");
+            lcd_command(0xc0);
+            lcd_string("Press 1 to open box"); 
             if((key=='1'))//&&c==1)
             {
-//              lcd_command(0x01);
-//              lcd_command(0x80);
-//              lcd_string("Box opened");
+              lcd_command(0x01);
+              lcd_command(0x80);
+              lcd_string("Box opened");
               digitalWrite(44, HIGH);
               //put fed_buf used in used
-              Serial.println("Opening Box for delivery");
+              //Serial.println("Opening Box for delivery");
         
             }
                
@@ -257,5 +261,6 @@ void loop()
     }//closing for if(key)
    
 }//closing for void loop()
+
 
 
