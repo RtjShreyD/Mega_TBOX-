@@ -68,33 +68,56 @@ void setup()
 
     Serial.println("------------------------------------");
     Serial.println("Get JSON test...");
+ }
 
-    if (Firebase.getString(firebaseData, path))
+void loop() 
+{ 
+  if (Firebase.getString(firebaseData, path))
     {
         Serial.println("PASSED");
         Serial.println("PATH: " + firebaseData.dataPath());
         Serial.println("TYPE: " + firebaseData.dataType());
         //Serial.print("VALUE: ");
-        if (firebaseData.dataType() == "int")
-            Serial.println(firebaseData.intData());
-        else if (firebaseData.dataType() == "float")
-            Serial.println(firebaseData.floatData(), 5);
-        else if (firebaseData.dataType() == "double")
-            printf("%.9lf\n", firebaseData.doubleData());
-        else if (firebaseData.dataType() == "boolean")
-            Serial.println(firebaseData.boolData() == 1 ? "true" : "false");
-        else if (firebaseData.dataType() == "string")
-            Serial.println(firebaseData.stringData());
-        else if (firebaseData.dataType() == "json"){
-           Serial.println(firebaseData.jsonData());
+
+        //Data = Firebase.getString(firebaseData, path);
+        Data = firebaseData.stringData();
+        Serial.print("Lets see Data");
+        Serial.println(Data);
+        len=sizeof(Data);
+        Data.toCharArray(DataBuf, len);
+        Serial.print("now see Old Data: ");
+        Serial.println(OldData);
+        Serial.print("now see DataBuf: ");
+        Serial.println(DataBuf);
+//      Serial.println("then we have");
+  
+   
+  
+        if(!(strcmp(DataBuf, OldData)==0)) //not identical
+          {    
+            Serial.println("In if");
+            Serial.println(DataBuf);
+            memset(&OldData, '\0' , sizeof(OldData));
+            Serial.println("Old data after memset is " );
+            Serial.println(OldData);
+            strcpy(OldData, DataBuf);
+          }
+       
+       else
+          {
+            Serial.println("In else"); 
+            memset(&Data, '\0' , sizeof(Data));
+            memset(&DataBuf, '\0' , sizeof(DataBuf));
+            Serial.println("Data and DataBuf cleared");
+            Serial.println(Data);
+            Serial.println(DataBuf);
+          }
+     
      }
 
         //Data = firebaseData.stringData(); //store for next test
         //Serial.println(Data);
-        
-        Serial.println("------------------------------------");
-        Serial.println();
-    }
+       
     else
     {
         Serial.println("FAILED");
@@ -103,47 +126,49 @@ void setup()
         Serial.println();
     }
     
-} 
 
-void loop() 
-{ 
+
+
+
+
+  
   
 //  Data = firebaseData.stringData();
-  Data = Firebase.getString(firebaseData, path);
-  //Data = firebaseData.stringData();
-  Serial.print("Lets see Data");
-  Serial.println(Data);
-  len=sizeof(Data);
-  Data.toCharArray(DataBuf, len);
-  Serial.print("now see Old Data: ");
-  Serial.println(OldData);
-  Serial.print("now see DataBuf: ");
-  Serial.println(DataBuf);
-//  Serial.println("then we have");
-  
-   
-  
-  if(!(strcmp(DataBuf, OldData)==0)) //not identical
-  {    
-     Serial.println("In if");
-     Serial.println(DataBuf);
-     memset(&OldData, '\0' , sizeof(OldData));
-     Serial.println("Old data after memset is " );
-     Serial.println(OldData);
-     strcpy(OldData, DataBuf);
-  }
-  else
-  {
-     Serial.println("In else"); 
-     memset(&Data, '\0' , sizeof(Data));
-     memset(&DataBuf, '\0' , sizeof(DataBuf));
-     Serial.println("Data and DataBuf cleared");
-     Serial.println(Data);
-     Serial.println(DataBuf);
-     
-  }
-
-   
-  delay(1000); 
-  
+//  Data = Firebase.getString(firebaseData, path);
+//  //Data = firebaseData.stringData();
+//  Serial.print("Lets see Data");
+//  Serial.println(Data);
+//  len=sizeof(Data);
+//  Data.toCharArray(DataBuf, len);
+//  Serial.print("now see Old Data: ");
+//  Serial.println(OldData);
+//  Serial.print("now see DataBuf: ");
+//  Serial.println(DataBuf);
+////  Serial.println("then we have");
+//  
+//   
+//  
+//  if(!(strcmp(DataBuf, OldData)==0)) //not identical
+//  {    
+//     Serial.println("In if");
+//     Serial.println(DataBuf);
+//     memset(&OldData, '\0' , sizeof(OldData));
+//     Serial.println("Old data after memset is " );
+//     Serial.println(OldData);
+//     strcpy(OldData, DataBuf);
+//  }
+//  else
+//  {
+//     Serial.println("In else"); 
+//     memset(&Data, '\0' , sizeof(Data));
+//     memset(&DataBuf, '\0' , sizeof(DataBuf));
+//     Serial.println("Data and DataBuf cleared");
+//     Serial.println(Data);
+//     Serial.println(DataBuf);
+//     
+//  }
+//
+//   
+//  delay(1000); 
+//  
 }                   
