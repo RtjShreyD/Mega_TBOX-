@@ -31,7 +31,7 @@ int f=0;
 char rec = 0;
 char rec_start = 0, rec_stop = 0, count = 0, count2 = 0, rec_nxt =0, stop_all = 0;
 char rec_str[10], rec_data[10], rec_status[3];
-///.............///
+///.............////
 
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
 
