@@ -188,25 +188,17 @@ void  serialEvent1()  //Serial Rx ISR
           if(strcmp(fed_buf0,odr_cmp)==0){pointer = 1;}  
           if(strcmp(fed_buf1,odr_cmp)==0){pointer = 2;}
           if(strcmp(fed_buf2,odr_cmp)==0){pointer = 3;}
-
-          Serial.print("Pointer value is   ");
+          
           Serial.println(pointer);
           switch(pointer)
           {
             case 1: nullify_arr(fed_buf0);
                     Serial.println("Inside switch case 1, nullified fed_buf");
                     Serial.println(stats);
-                    break;
                     
             case 2: nullify_arr(fed_buf1);
-                    Serial.println("Inside switch case 2, nullified fed_buf");
-                    Serial.println(stats);
-                    break;
                     
             case 3: nullify_arr(fed_buf2);
-                    Serial.println("Inside switch case 3, nullified fed_buf");
-                    Serial.println(stats);
-                    break;
                     
           }       
           

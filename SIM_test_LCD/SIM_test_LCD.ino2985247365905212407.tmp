@@ -23,7 +23,7 @@ char key_start = 0, key_stop=0;
 char fed_buf0[10]= {'0','0','0'};
 char fed_buf1[10]= {'1','1','1'};
 char fed_buf2[10]= {'2','2','2'}; 
-int f=0, pointer=0;  //f lis flag bit for adding new, pointer is flag bit for checking which fed_buf the order belongs while servicing 
+int f=0;
 
 //for serial recving variables and buffers// 
 char rec = 0;
@@ -50,17 +50,12 @@ void str_slice(char string[], int pos, int len)  //to slice a string(actually a 
    sub_str[c] = '\0';
 }
 
-void nullify_arr(char arr[])
-{
-  memset(&arr[0], '\0', sizeof(arr));   
-}
-
 //Custom functions block end//
 
 void setup()
 {
 
-   pinMode(44, OUTPUT); //lock pin
+   pinMode(44, OUTPUT);
    pinMode(45, OUTPUT);
    pinMode(46, OUTPUT);  
    pinMode(2, INPUT);
@@ -175,47 +170,11 @@ void  serialEvent1()  //Serial Rx ISR
           //we need to slice the global buf now and compare the order with all 3 fed_bufs and empty the fed_buf accordingly and with status we need to open and close the box//
 
           strcpy(ser_data, ser_str);
+          //Serial.println(ser_data);
           str_slice(ser_data, 1, 4);
-          strcpy(odr_cmp, sub_str); //odr_cmp now contains my order id which needs to be compared with fed_bufs
-          nullify_arr(sub_str);
-
-          str_slice(ser_data, 6, 6);
-          strcpy(stats, sub_str); //stats now contain the status of the box
-          nullify_arr(sub_str);
-          Serial.print("Stats value is   ");
-          Serial.println(stats);
-          
-          if(strcmp(fed_buf0,odr_cmp)==0){pointer = 1;}  
-          if(strcmp(fed_buf1,odr_cmp)==0){pointer = 2;}
-          if(strcmp(fed_buf2,odr_cmp)==0){pointer = 3;}
-
-          Serial.print("Pointer value is   ");
-          Serial.println(pointer);
-          switch(pointer)
-          {
-            case 1: nullify_arr(fed_buf0);
-                    Serial.println("Inside switch case 1, nullified fed_buf");
-                    Serial.println(stats);
-                    break;
-                    
-            case 2: nullify_arr(fed_buf1);
-                    Serial.println("Inside switch case 2, nullified fed_buf");
-                    Serial.println(stats);
-                    break;
-                    
-            case 3: nullify_arr(fed_buf2);
-                    Serial.println("Inside switch case 3, nullified fed_buf");
-                    Serial.println(stats);
-                    break;
-                    
-          }       
-          
-         
-//          if (stats == '1')
-//          {
-//            digitalWrite(44, HIGH);
-//              
-//          }
+          strcpy(odr_cmp, sub_str);
+          memset(sub_str, '\0', sizeof(sub_str)); //nullifying the sub_str global slicing variable
+          Serial.println(odr_cmp);
                     
           Serial.println("Servicing Block reached");
           ser_start = 0;
