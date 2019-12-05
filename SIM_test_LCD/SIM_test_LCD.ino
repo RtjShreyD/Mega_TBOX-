@@ -64,6 +64,7 @@ void setup()
    pinMode(45, OUTPUT);
    pinMode(46, OUTPUT);  
    pinMode(2, INPUT);
+   pinMode(3, OUTPUT);
    lcd.begin(20, 4);
    lcd.clear();
    lcd.setCursor(0, 0); 
@@ -91,21 +92,24 @@ void pin_ISR() //ISR for when box is manually closed a latch gets closed and hig
         lcd.clear();
         lcd.setCursor(0, 0);
        
-        
-        switch(f)
-        {
-          case 1: memset(&fed_buf0,'v' , sizeof(fed_buf0)); //using v as char is unable to be input from keypad
-                  f=0;
-                  break;
 
-          case 2: memset(&fed_buf1,'v' , sizeof(fed_buf1));
-                  f=0;
-                  break;
-                  
-          case 3 :memset(&fed_buf2,'v' , sizeof(fed_buf2));
-                  f=0;
-                  break;
-        }    
+        if((f==1)|(pointer==1))
+        {
+          nullify_arr(fed_buf0);
+          f=0; pointer=0;  
+        }
+
+        if((f==2)|(pointer==2))
+        {
+          nullify_arr(fed_buf1);
+          f=0; pointer=0;  
+        }
+
+        if((f==2)|(pointer==2))
+        {
+          nullify_arr(fed_buf2);
+          f=0; pointer=0;  
+        }
            
         lcd.print("Welcome ParcelBox"); ///From here it has to get to the initial state of Welcome ParcelBox
 }
@@ -169,55 +173,28 @@ void  serialEvent1()  //Serial Rx ISR
           
         if((rec == '&') && (ser_start == 1))
         {
-          //clean the global buffer variable  
-          //copy contents of rec_str to global buffer variable
-          //now we have global buf containing string of fmt !<order>,<status>&  
-          //we need to slice the global buf now and compare the order with all 3 fed_bufs and empty the fed_buf accordingly and with status we need to open and close the box//
-
           strcpy(ser_data, ser_str);
           str_slice(ser_data, 1, 4);
           strcpy(odr_cmp, sub_str); //odr_cmp now contains my order id which needs to be compared with fed_bufs
           nullify_arr(sub_str);
 
           str_slice(ser_data, 6, 6);
-          strcpy(stats, sub_str); //stats now contain the status of the box
-          nullify_arr(sub_str);
-          Serial.print("Stats value is   ");
-          Serial.println(stats);
-          
+
           if(strcmp(fed_buf0,odr_cmp)==0){pointer = 1;}  
           if(strcmp(fed_buf1,odr_cmp)==0){pointer = 2;}
           if(strcmp(fed_buf2,odr_cmp)==0){pointer = 3;}
-
-          Serial.print("Pointer value is   ");
-          Serial.println(pointer);
-          switch(pointer)
-          {
-            case 1: nullify_arr(fed_buf0);
-                    Serial.println("Inside switch case 1, nullified fed_buf");
-                    Serial.println(stats);
-                    break;
-                    
-            case 2: nullify_arr(fed_buf1);
-                    Serial.println("Inside switch case 2, nullified fed_buf");
-                    Serial.println(stats);
-                    break;
-                    
-            case 3: nullify_arr(fed_buf2);
-                    Serial.println("Inside switch case 3, nullified fed_buf");
-                    Serial.println(stats);
-                    break;
-                    
-          }       
           
-         
-//          if (stats == '1')
-//          {
-//            digitalWrite(44, HIGH);
-//              
-//          }
-                    
-          Serial.println("Servicing Block reached");
+          if((sub_str[0]=='1')&&(strlen(sub_str) == 1)&&((pointer==1)|(pointer==2)|(pointer==3)))
+          { 
+            stats = 'o';
+            nullify_arr(sub_str);  
+          }
+          if((sub_str[0]=='0')&&(strlen(sub_str) == 1)&&((pointer==1)|(pointer==2)|(pointer==3)))
+          {
+            stats = 'c'; 
+            nullify_arr(sub_str); 
+          }
+                                              
           ser_start = 0;
           ser_stop = 1;
           count2 = 0;
@@ -267,7 +244,8 @@ void loop()
               lcd.clear(); //clear screen
               lcd.setCursor(0,0);
               lcd.print("Authenticated");             
-              auth_flag = 1;  
+              auth_flag = 1; 
+                          
             }
             else
             {
@@ -296,6 +274,7 @@ void loop()
            lcd.setCursor(0,0);
            lcd.print("Enter order id: ");
            auth_flag = 0;
+           stats = '\0';
                      
         }      
         
@@ -303,15 +282,45 @@ void loop()
         {
             lcd.setCursor(0,1);
             lcd.print("Press 1 to open box"); 
-            if((key=='1'))//&&c==1)
+            if((key=='1'))
             {
-              lcd.clear();
-              lcd.setCursor(0,0);
-              lcd.print("Box opened");
-              digitalWrite(44, HIGH);        
+                stats = 'o'; 
+                auth_flag = 0;      
             }
                
         }   
     }//closing for if(key)
+
+    if (stats=='o') 
+    {      
+          lcd.clear();
+          lcd.setCursor(0,0);
+          lcd.print("Box opened");
+          digitalWrite(44, HIGH); 
+          stats = '\0'; 
+    }
+
+    if (stats=='c') 
+    { 
+//        digitalWrite(44, LOW);         //Closing the box for delivery above and reseting its flag//Could be used 
+//        lcd.clear();
+//        lcd.setCursor(0, 0) ;
+//        lcd.print("Locking Box");
+//        Serial.println("OK");
+//        delay(20000); //to be adjusted as per hardware caliberation
+//        lcd.clear();
+//        lcd.setCursor(0, 0); 
+//        lcd.print("Delivery success");
+//        delay(50000);
+//        lcd.clear();
+//        lcd.setCursor(0, 0);
+        stats = '\0'; 
+        digitalWrite(3, HIGH);
+    }
+    
    
 }//closing for void loop()
+
+
+
+///////////So the leftover Glitch is after stats is set 0 from APP, the box gets locked forever untill it is reset///////////
