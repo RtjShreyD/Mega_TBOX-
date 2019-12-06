@@ -117,13 +117,14 @@ void pin_ISR() //ISR for when box is manually closed a latch gets closed and hig
 
 //Adding new order serial event //
 
-void  serialEvent()  //Serial Rx ISR
+void  serialEvent1()  //Serial Rx ISR
 {
-    while (Serial.available()) 
+    while (Serial1.available()) 
     {
-      //Serial.println("inside serial event");
-      rec = Serial.read();
-      //Serial.print(rec);
+      lcd.clear();
+      lcd.print("inside serial event");
+      rec = Serial1.read();
+      Serial.print(rec);
         //Add new order block below//
         
         if((rec == '@') && (rec_start == 1))

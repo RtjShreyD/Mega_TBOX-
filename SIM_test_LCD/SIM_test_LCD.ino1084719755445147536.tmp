@@ -70,7 +70,7 @@ void setup()
    lcd.setCursor(0, 0); 
    lcd.print("Welcome ParcelBox");
    Serial.begin(9600);
-   Serial1.begin(9600);    
+   Serial2.begin(9600);    
    Serial.println("Welcome Parcebox");
 
    attachInterrupt(digitalPinToInterrupt(2),pin_ISR, RISING);   
@@ -117,13 +117,12 @@ void pin_ISR() //ISR for when box is manually closed a latch gets closed and hig
 
 //Adding new order serial event //
 
-void  serialEvent()  //Serial Rx ISR
+void  serialEvent1()  //Serial Rx ISR
 {
-    while (Serial.available()) 
+    while (Serial2.available()) 
     {
-      //Serial.println("inside serial event");
-      rec = Serial.read();
-      //Serial.print(rec);
+      rec = Serial2.read();
+      Serial.print(rec);
         //Add new order block below//
         
         if((rec == '@') && (rec_start == 1))

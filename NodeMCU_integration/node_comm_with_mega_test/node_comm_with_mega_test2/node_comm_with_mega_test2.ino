@@ -50,23 +50,18 @@ void setup()
     //Serial.print("Connecting to Wi-Fi");
     while (WiFi.status() != WL_CONNECTED)
     {
-//        Serial.print(".");
         delay(300);
     }
-//    Serial.println();
-//    Serial.print("Connected with IP: ");
-//    Serial.println(WiFi.localIP());
-//    Serial.println();
+
 
     Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
     Firebase.reconnectWiFi(true);
 
-//    Serial.println("------------------------------------");
-//    Serial.println("Get JSON test...");
  }
 
 void loop() 
 { 
+  
   //Service Order
   if (Firebase.getString(firebaseData, path))
     {
@@ -87,7 +82,6 @@ void loop()
        
        else
           {
-
             memset(&Data, '\0' , sizeof(Data));
             memset(&DataBuf, '\0' , sizeof(DataBuf));
           }
