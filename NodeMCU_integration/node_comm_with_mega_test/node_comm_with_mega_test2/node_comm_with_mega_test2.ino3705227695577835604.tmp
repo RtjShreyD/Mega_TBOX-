@@ -50,7 +50,7 @@ void setup()
     //Serial.print("Connecting to Wi-Fi");
     while (WiFi.status() != WL_CONNECTED)
     {
-//        Serial.print(".");
+        Serial.print(".");
         delay(300);
     }
 //    Serial.println();
@@ -100,22 +100,31 @@ void loop()
 
         Data2 = firebaseData.stringData();
         len2=sizeof(Data2);
+        //Serial.println(len2);
         Data2.toCharArray(DataBuf2, len2); 
-   
-  
-        if(!(strcmp(DataBuf2, OldData2)==0)) //not identical
-          {    
+        str_slice(DataBuf2, (len2-5), len2);
+        memset(&DataBuf2, '\0' , sizeof(DataBuf2));
+        strcpy(new_odr, sub_str);
+        memset(&sub_str, '\0', sizeof(sub_str));
+                
+        if(!(strcmp(new_odr, OldData2)==0)) //not identical
+          { 
+//            str_slice(DataBuf2, (len2-5), len2);
+//            strcpy(new_odr, sub_str);
+//            memset(&sub_str, '\0', sizeof(sub_str));
+                   
             Serial.print('$');
-            Serial.println(DataBuf2);
-            
+            Serial.println(new_odr);
+           // memset(&new_odr, '\0' , sizeof(new_odr));
             memset(&OldData2, '\0' , sizeof(OldData2));
-            strcpy(OldData2, DataBuf2);
+            strcpy(OldData2, new_odr);
           }
        
        else
           {
             memset(&Data2, '\0' , sizeof(Data2));
-            memset(&DataBuf2, '\0' , sizeof(DataBuf2));
+//            memset(&DataBuf2, '\0' , sizeof(DataBuf2));
+            memset(&new_odr, '\0' , sizeof(new_odr));
             
           }
      

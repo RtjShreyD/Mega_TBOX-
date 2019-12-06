@@ -71,6 +71,7 @@ void setup()
    lcd.print("Welcome ParcelBox");
    Serial.begin(9600);
    Serial1.begin(9600);    
+   Serial.println("Welcome Parcebox");
 
    attachInterrupt(digitalPinToInterrupt(2),pin_ISR, RISING);   
 
@@ -121,7 +122,7 @@ void  serialEvent1()  //Serial Rx ISR
     while (Serial1.available()) 
     {
       rec = Serial1.read();
-
+      Serial.print(rec);
         //Add new order block below//
         
         if((rec == '@') && (rec_start == 1))
@@ -245,7 +246,7 @@ void loop()
               lcd.setCursor(0,0);
               lcd.print("Authenticated");             
               auth_flag = 1; 
-                          
+              f = 0;            
             }
             else
             {
@@ -254,7 +255,6 @@ void loop()
               lcd.print("Order Id Incorrect");
             } 
             memset(&key_data[0], '\0', sizeof(key_data));
-
             
          }
           
@@ -300,23 +300,23 @@ void loop()
           stats = '\0'; 
     }
 
-    if (stats=='c') 
-    { 
-//        digitalWrite(44, LOW);         //Closing the box for delivery above and reseting its flag//Could be used 
-//        lcd.clear();
-//        lcd.setCursor(0, 0) ;
-//        lcd.print("Locking Box");
-//        Serial.println("OK");
-//        delay(20000); //to be adjusted as per hardware caliberation
-//        lcd.clear();
-//        lcd.setCursor(0, 0); 
-//        lcd.print("Delivery success");
-//        delay(50000);
-//        lcd.clear();
-//        lcd.setCursor(0, 0);
-        stats = '\0'; 
-        digitalWrite(3, HIGH);
-    }
+//    if (stats=='c') 
+//    { 
+////        digitalWrite(44, LOW);         //Closing the box for delivery above and reseting its flag//Could be used 
+////        lcd.clear();
+////        lcd.setCursor(0, 0) ;
+////        lcd.print("Locking Box");
+////        Serial.println("OK");
+////        delay(20000); //to be adjusted as per hardware caliberation
+////        lcd.clear();
+////        lcd.setCursor(0, 0); 
+////        lcd.print("Delivery success");
+////        delay(50000);
+////        lcd.clear();
+////        lcd.setCursor(0, 0);
+//        stats = '\0'; 
+//        digitalWrite(3, HIGH);
+//    }
     
    
 }//closing for void loop()
