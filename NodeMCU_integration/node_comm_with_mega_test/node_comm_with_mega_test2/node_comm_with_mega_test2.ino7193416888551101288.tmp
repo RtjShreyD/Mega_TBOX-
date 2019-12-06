@@ -11,7 +11,7 @@
 #define WIFI_PASSWORD "82$morph"
 
 //Global Variables block//
-char sub_str[15], DataBuf[20], DataBuf2[10], new_odr[5] ;
+char sub_str[15], DataBuf[20], DataBuf2[10] ;
 char OldData[] = "XXXXXXXXXXXXXXXXXXX";
 char OldData2[] ="XXXXXXXXXXXXXXXXXXX";
 int count = 0;
@@ -67,7 +67,6 @@ void setup()
 
 void loop() 
 { 
-  //Service Order
   if (Firebase.getString(firebaseData, path))
     {
 
@@ -78,9 +77,8 @@ void loop()
   
         if(!(strcmp(DataBuf, OldData)==0)) //not identical
           {    
-            Serial.print('!');
-            Serial.print(DataBuf);
-            Serial.println('&');
+            Serial.print('$');
+            Serial.println(DataBuf);
             memset(&OldData, '\0' , sizeof(OldData));
             strcpy(OldData, DataBuf);
           }
@@ -99,30 +97,23 @@ void loop()
     {
 
         Data2 = firebaseData.stringData();
-        len2=sizeof(Data2);
-        //Serial.println(len2);
+        len=sizeof(Data2);
         Data2.toCharArray(DataBuf2, len2); 
-        
-        
-        
+   
+  
         if(!(strcmp(DataBuf2, OldData2)==0)) //not identical
-          { 
-            str_slice(DataBuf2, (len2-5), len2);
-            strcpy(new_odr, sub_str);
-            memset(&sub_str, '\0', sizeof(sub_str));
-                   
-            Serial.print('$');
-            Serial.println(new_odr);
-            memset(&new_odr, '\0' , sizeof(new_odr));
+          {    
+            Serial.print('!');
+            Serial.println(DataBuf2);
             memset(&OldData2, '\0' , sizeof(OldData2));
             strcpy(OldData2, DataBuf2);
           }
        
        else
           {
+
             memset(&Data2, '\0' , sizeof(Data2));
             memset(&DataBuf2, '\0' , sizeof(DataBuf2));
-            
           }
      
      }

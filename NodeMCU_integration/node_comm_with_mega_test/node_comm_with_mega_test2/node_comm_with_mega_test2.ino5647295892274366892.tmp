@@ -11,18 +11,16 @@
 #define WIFI_PASSWORD "82$morph"
 
 //Global Variables block//
-char sub_str[15], DataBuf[20], DataBuf2[10], new_odr[5] ;
+char sub_str[15], DataBuf[20], DataBuf2210] ;
 char OldData[] = "XXXXXXXXXXXXXXXXXXX";
 char OldData2[] ="XXXXXXXXXXXXXXXXXXX";
+String nx = "";
 int count = 0;
 String Data = "";
-String Data2 = "";
 int len=0;
-int len2 = 0;
 
 //String path = "/boxes/Y3FRSKfkVcYAPygUD9cUP2762HY2";
   String path = "/user/aXoBuRpONZdeIWvsrhZjNLNk8953/boxStatus" ;
-  String path2 = "/user/aXoBuRpONZdeIWvsrhZjNLNk8953/NewOrderId" ;
 
 //******** Global Variables block end ********//
 
@@ -67,7 +65,6 @@ void setup()
 
 void loop() 
 { 
-  //Service Order
   if (Firebase.getString(firebaseData, path))
     {
 
@@ -78,9 +75,8 @@ void loop()
   
         if(!(strcmp(DataBuf, OldData)==0)) //not identical
           {    
-            Serial.print('!');
-            Serial.print(DataBuf);
-            Serial.println('&');
+            Serial.print('$');
+            Serial.println(DataBuf);
             memset(&OldData, '\0' , sizeof(OldData));
             strcpy(OldData, DataBuf);
           }
@@ -93,41 +89,7 @@ void loop()
           }
      
      }
-    /// New order
-
-    if (Firebase.getString(firebaseData, path2))
-    {
-
-        Data2 = firebaseData.stringData();
-        len2=sizeof(Data2);
-        //Serial.println(len2);
-        Data2.toCharArray(DataBuf2, len2); 
-        
-        
-        
-        if(!(strcmp(DataBuf2, OldData2)==0)) //not identical
-          { 
-            str_slice(DataBuf2, (len2-5), len2);
-            strcpy(new_odr, sub_str);
-            memset(&sub_str, '\0', sizeof(sub_str));
-                   
-            Serial.print('$');
-            Serial.println(new_odr);
-            memset(&new_odr, '\0' , sizeof(new_odr));
-            memset(&OldData2, '\0' , sizeof(OldData2));
-            strcpy(OldData2, DataBuf2);
-          }
        
-       else
-          {
-            memset(&Data2, '\0' , sizeof(Data2));
-            memset(&DataBuf2, '\0' , sizeof(DataBuf2));
-            
-          }
-     
-     }
-
-    ///   
     else
     {
         Serial.println("FAILED");

@@ -4,25 +4,28 @@
 #include<string.h>
 #include<stdio.h>
 
+//#define FIREBASE_HOST "restsvr.firebaseio.com" //firebase end point
+//#define FIREBASE_AUTH "DAyn8zLBXmBecOYEZue81VirzEd3upyRukT23ghG" //secret key for authentication
+
 #define FIREBASE_HOST "https://trondev-ad771.firebaseio.com" 
 #define FIREBASE_AUTH "U0zEMfLToxY7ZO36Wfk9i9bx3KiLHPLIuv60p2CD"  //tron-dev account
+
+//#define WIFI_SSID "Tech_D3882400"  
+//#define WIFI_PASSWORD "TAQAHYWG"
 
 #define WIFI_SSID "Morphedo -2.4GHz"
 #define WIFI_PASSWORD "82$morph"
 
 //Global Variables block//
-char sub_str[15], DataBuf[20], DataBuf2[10], new_odr[5] ;
-char OldData[] = "XXXXXXXXXXXXXXXXXXX";
-char OldData2[] ="XXXXXXXXXXXXXXXXXXX";
+char sub_str[15], box_id[5], odr_id[5], charBuf[10], DataBuf[10];
+char OldData[] = "XXXXXXXXX";
+String nx = "";
 int count = 0;
 String Data = "";
-String Data2 = "";
 int len=0;
-int len2 = 0;
 
 //String path = "/boxes/Y3FRSKfkVcYAPygUD9cUP2762HY2";
   String path = "/user/aXoBuRpONZdeIWvsrhZjNLNk8953/boxStatus" ;
-  String path2 = "/user/aXoBuRpONZdeIWvsrhZjNLNk8953/NewOrderId" ;
 
 //******** Global Variables block end ********//
 
@@ -45,89 +48,74 @@ FirebaseData firebaseData;
 void setup() 
 {
     Serial.begin(9600);
+//    Serial.println();
+//    Serial.println();
 
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-    Serial.print("Connecting to Wi-Fi");
+//    Serial.print("Connecting to Wi-Fi");
     while (WiFi.status() != WL_CONNECTED)
     {
         Serial.print(".");
         delay(300);
     }
-    Serial.println();
-    Serial.print("Connected with IP: ");
-    Serial.println(WiFi.localIP());
+//    Serial.println();
+//    Serial.print("Connected with IP: ");
+//    Serial.println(WiFi.localIP());
     Serial.println();
 
     Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
     Firebase.reconnectWiFi(true);
 
-    Serial.println("------------------------------------");
-    Serial.println("Get JSON test...");
+//    Serial.println("------------------------------------");
+//    Serial.println("Get JSON test...");
  }
 
 void loop() 
 { 
-  //Service Order
   if (Firebase.getString(firebaseData, path))
     {
+//        Serial.println("PASSED");
+//        Serial.println("PATH: " + firebaseData.dataPath());
+//        Serial.println("TYPE: " + firebaseData.dataType());
+        //Serial.print("VALUE: ");
 
+        //Data = Firebase.getString(firebaseData, path);
         Data = firebaseData.stringData();
+//        Serial.print("Lets see Data");
+//        Serial.println(Data);
         len=sizeof(Data);
-        Data.toCharArray(DataBuf, len); 
+        Data.toCharArray(DataBuf, len);
+//        Serial.print("now see Old Data: ");
+//        Serial.println(OldData);
+//        Serial.print("now see DataBuf: ");
+//        Serial.println(DataBuf);
+////      Serial.println("then we have");
+  
    
   
         if(!(strcmp(DataBuf, OldData)==0)) //not identical
           {    
-            Serial.print('!');
-            Serial.print(DataBuf);
-            Serial.println('&');
+//            Serial.println("In if");
+            Serial.print('$');
+            Serial.println(DataBuf);
             memset(&OldData, '\0' , sizeof(OldData));
+//            Serial.println("Old data after memset is " );
+//            Serial.println(OldData);
             strcpy(OldData, DataBuf);
           }
        
        else
           {
-
+//            Serial.println("In else"); 
             memset(&Data, '\0' , sizeof(Data));
             memset(&DataBuf, '\0' , sizeof(DataBuf));
+//            Serial.println("Data and DataBuf cleared");
+//            Serial.println(Data);
+//            Serial.println(DataBuf);
           }
      
      }
-    /// New order
-
-    if (Firebase.getString(firebaseData, path2))
-    {
-
-        Data2 = firebaseData.stringData();
-        len2=sizeof(Data2);
-        //Serial.println(len2);
-        Data2.toCharArray(DataBuf2, len2); 
-        
-        
-        
-        if(!(strcmp(DataBuf2, OldData2)==0)) //not identical
-          { 
-            str_slice(DataBuf2, (len2-5), len2);
-            strcpy(new_odr, sub_str);
-            memset(&sub_str, '\0', sizeof(sub_str));
-                   
-            Serial.print('$');
-            Serial.println(new_odr);
-            memset(&new_odr, '\0' , sizeof(new_odr));
-            memset(&OldData2, '\0' , sizeof(OldData2));
-            strcpy(OldData2, DataBuf2);
-          }
        
-       else
-          {
-            memset(&Data2, '\0' , sizeof(Data2));
-            memset(&DataBuf2, '\0' , sizeof(DataBuf2));
-            
-          }
-     
-     }
-
-    ///   
     else
     {
         Serial.println("FAILED");
